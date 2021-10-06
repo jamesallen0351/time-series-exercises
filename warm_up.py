@@ -15,23 +15,21 @@ def get_connection(db, user=user, host=host, password=password):
     
     
     
+# assign query to variable 
 def tsa_item_data():
     '''
     This function reads the tsa_item_demand data from the Codeup db into a df,
     write it to a csv file, and returns the df.
     '''
     # Create SQL query.
-    sql_query = """SELECT * from sales, stores, items
+    sql_query = """SELECT stores.*, items.*, sales.sale_date, sales.sale_amount FROM sales
     JOIN stores USING (store_id)
     JOIN items USING (item_id);"""
-
-
-    
+        
     # Read in DataFrame from Codeup db.
     df = pd.read_sql(sql_query, get_connection('tsa_item_demand'))
     
     return df
-
 
 
 def get_tsa_data():
@@ -47,11 +45,11 @@ def get_tsa_data():
     else:
         
         # Read fresh data from db into a DataFrame.
-        df = new_titanic_data()
+        df = tsa_item_data()
         
         # Write DataFrame to a csv file.
         df.to_csv('tsa_item_demand.csv')
         
     return df
 
-query = 'SELECT stores.*, items.*, sales.sale_date, sales.sale_amount \ FROM sales \ JOIN stores USING (store_id) \ JOIN items USING (item_id);'
+
